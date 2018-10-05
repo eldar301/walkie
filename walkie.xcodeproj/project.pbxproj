@@ -13,6 +13,9 @@
 		2C080C0E2167E24C0018B1B8 /* walkie.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C0C2167E24C0018B1B8 /* walkie.xcdatamodeld */; };
 		2C080C102167E24C0018B1B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C0F2167E24C0018B1B8 /* Assets.xcassets */; };
 		2C080C132167E24C0018B1B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C112167E24C0018B1B8 /* LaunchScreen.storyboard */; };
+		2C080C1F2167E6CF0018B1B8 /* Walk.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C1E2167E6CF0018B1B8 /* Walk.swift */; };
+		2C080C212167E7450018B1B8 /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C202167E7450018B1B8 /* Coordinate.swift */; };
+		2C080C242167E8250018B1B8 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C232167E8250018B1B8 /* LocationProvider.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +27,9 @@
 		2C080C0F2167E24C0018B1B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C080C122167E24C0018B1B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2C080C142167E24C0018B1B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		2C080C1E2167E6CF0018B1B8 /* Walk.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Walk.swift; sourceTree = "<group>"; };
+		2C080C202167E7450018B1B8 /* Coordinate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		2C080C232167E8250018B1B8 /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +62,50 @@
 		2C080C042167E24C0018B1B8 /* walkie */ = {
 			isa = PBXGroup;
 			children = (
+				2C080C222167E8150018B1B8 /* Interactor */,
+				2C080C1D2167E6BD0018B1B8 /* Presenter */,
+				2C080C1C2167E6B70018B1B8 /* View */,
+				2C080C1B2167E6B10018B1B8 /* Entity */,
 				2C080C052167E24C0018B1B8 /* AppDelegate.swift */,
-				2C080C072167E24C0018B1B8 /* ViewController.swift */,
-				2C080C092167E24C0018B1B8 /* Main.storyboard */,
 				2C080C0F2167E24C0018B1B8 /* Assets.xcassets */,
 				2C080C112167E24C0018B1B8 /* LaunchScreen.storyboard */,
 				2C080C142167E24C0018B1B8 /* Info.plist */,
 				2C080C0C2167E24C0018B1B8 /* walkie.xcdatamodeld */,
 			);
 			path = walkie;
+			sourceTree = "<group>";
+		};
+		2C080C1B2167E6B10018B1B8 /* Entity */ = {
+			isa = PBXGroup;
+			children = (
+				2C080C202167E7450018B1B8 /* Coordinate.swift */,
+				2C080C1E2167E6CF0018B1B8 /* Walk.swift */,
+			);
+			path = Entity;
+			sourceTree = "<group>";
+		};
+		2C080C1C2167E6B70018B1B8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				2C080C072167E24C0018B1B8 /* ViewController.swift */,
+				2C080C092167E24C0018B1B8 /* Main.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		2C080C1D2167E6BD0018B1B8 /* Presenter */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Presenter;
+			sourceTree = "<group>";
+		};
+		2C080C222167E8150018B1B8 /* Interactor */ = {
+			isa = PBXGroup;
+			children = (
+				2C080C232167E8250018B1B8 /* LocationProvider.swift */,
+			);
+			path = Interactor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -99,6 +140,11 @@
 				TargetAttributes = {
 					2C080C012167E24C0018B1B8 = {
 						CreatedOnToolsVersion = 10.0;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 0;
+							};
+						};
 					};
 				};
 			};
@@ -138,9 +184,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2C080C1F2167E6CF0018B1B8 /* Walk.swift in Sources */,
 				2C080C082167E24C0018B1B8 /* ViewController.swift in Sources */,
 				2C080C062167E24C0018B1B8 /* AppDelegate.swift in Sources */,
+				2C080C242167E8250018B1B8 /* LocationProvider.swift in Sources */,
 				2C080C0E2167E24C0018B1B8 /* walkie.xcdatamodeld in Sources */,
+				2C080C212167E7450018B1B8 /* Coordinate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
