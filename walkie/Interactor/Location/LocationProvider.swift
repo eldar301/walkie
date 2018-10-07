@@ -10,7 +10,9 @@ import Foundation
 import CoreLocation
 
 protocol LocationProviderDelegate: class {
-    func update(withNewCoordinate: Coordinate, distanceDifference: Double)
+    func locationProviderDidStartUpdate()
+    func locationProviderDidStopUpdate()
+    func update(withNewLatitude: Double, longitude: Double, distanceDifference: Double)
 }
 
 protocol LocationProvider {
@@ -28,7 +30,7 @@ class LocationProviderDefault: NSObject, LocationProvider {
     
     private lazy var locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.delegate = self
         return locationManager
     }()
@@ -49,10 +51,12 @@ class LocationProviderDefault: NSObject, LocationProvider {
         }
         
         locationManager.startUpdatingLocation()
+        delegate?.locationProviderDidStartUpdate()
     }
     
     func stopUpdate() {
         locationManager.stopUpdatingLocation()
+        delegate?.locationProviderDidStopUpdate()
     }
     
 }
@@ -64,12 +68,11 @@ extension LocationProviderDefault: CLLocationManagerDelegate {
             return
         }
         
-        let currentCoordinate = Coordinate(latitude: currentLocation.coordinate.latitude,
-                                           longitude: currentLocation.coordinate.longitude)
+        let distanceDifference = previousLocation?.distance(from: currentLocation) ?? 0
         
-        let locationDistanceDifference = previousLocation?.distance(from: currentLocation) ?? 0
-        
-        delegate?.update(withNewCoordinate: currentCoordinate, distanceDifference: locationDistanceDifference)
+        delegate?.update(withNewLatitude: currentLocation.coordinate.latitude,
+                         longitude: currentLocation.coordinate.longitude,
+                         distanceDifference: distanceDifference)
         
         previousLocation = currentLocation
     }
