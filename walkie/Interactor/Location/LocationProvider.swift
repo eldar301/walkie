@@ -10,7 +10,7 @@ import Foundation
 import CoreLocation
 
 protocol LocationProviderDelegate: class {
-    func update(withNewCoordinate: Coordinate, totalDistance: Double)
+    func update(withNewCoordinate: Coordinate, distanceDifference: Double)
 }
 
 protocol LocationProvider {
@@ -25,8 +25,6 @@ class LocationProviderDefault: NSObject, LocationProvider {
     weak var delegate: LocationProviderDelegate?
     
     private var previousLocation: CLLocation?
-    
-    private var totalDistance: Double = 0
     
     private lazy var locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
@@ -66,14 +64,12 @@ extension LocationProviderDefault: CLLocationManagerDelegate {
             return
         }
         
-        let locationDistanceDifference: Double = previousLocation?.distance(from: currentLocation) ?? 0
-        
-        totalDistance += locationDistanceDifference
-        
         let currentCoordinate = Coordinate(latitude: currentLocation.coordinate.latitude,
                                            longitude: currentLocation.coordinate.longitude)
         
-        delegate?.update(withNewCoordinate: currentCoordinate, totalDistance: totalDistance)
+        let locationDistanceDifference = previousLocation?.distance(from: currentLocation) ?? 0
+        
+        delegate?.update(withNewCoordinate: currentCoordinate, distanceDifference: locationDistanceDifference)
         
         previousLocation = currentLocation
     }
