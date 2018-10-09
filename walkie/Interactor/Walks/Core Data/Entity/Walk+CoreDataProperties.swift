@@ -19,6 +19,7 @@ extension Walk {
 
     @NSManaged public var distance: Double
     @NSManaged public var date: NSDate?
+    @NSManaged public var startOfDay: NSDate?
     @NSManaged public var coordinates: NSOrderedSet?
 
 }

@@ -1,5 +1,5 @@
 //
-//  LocationProvider.swift
+//  LocationInteractor.swift
 //  walkie
 //
 //  Created by Eldar Goloviznin on 05/10/2018.
@@ -9,22 +9,22 @@
 import Foundation
 import CoreLocation
 
-protocol LocationProviderDelegate: class {
+protocol LocationInteractorDelegate: class {
     func locationProviderDidStartUpdate()
     func locationProviderDidStopUpdate()
     func update(withNewLatitude: Double, longitude: Double, distanceDifference: Double)
 }
 
-protocol LocationProvider {
-    var delegate: LocationProviderDelegate? { get set }
+protocol LocationInteractor: class {
+    var delegate: LocationInteractorDelegate? { get set }
     
     func startUpdate()
     func stopUpdate()
 }
 
-class LocationProviderDefault: NSObject, LocationProvider {
+class LocationInteractorDefault: NSObject, LocationInteractor {
     
-    weak var delegate: LocationProviderDelegate?
+    weak var delegate: LocationInteractorDelegate?
     
     private var previousLocation: CLLocation?
     
@@ -32,6 +32,7 @@ class LocationProviderDefault: NSObject, LocationProvider {
         let locationManager = CLLocationManager()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.delegate = self
+        locationManager.allowsBackgroundLocationUpdates = true
         return locationManager
     }()
     
@@ -61,7 +62,7 @@ class LocationProviderDefault: NSObject, LocationProvider {
     
 }
 
-extension LocationProviderDefault: CLLocationManagerDelegate {
+extension LocationInteractorDefault: CLLocationManagerDelegate {
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else {

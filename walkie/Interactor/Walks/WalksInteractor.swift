@@ -9,12 +9,14 @@
 import Foundation
 import CoreData
 
-protocol WalksInteractor {
+typealias DistanceAtDay = (startOfDay: Date, totalDistance: Double)
+
+protocol WalksInteractor: class {
     func createWalk(withDate: Date) -> Walk
     func createCoordinate(atLatitude: Double, longitude: Double) -> Coordinate
     func save()
     func fetchWalks(atDate: Date) -> [Walk]
-    func fetchDistance(atDates: Range<Date>) -> [Double]
+    func fetchDistances(atDates: ClosedRange<Date>) -> [DistanceAtDay]
 }
 
 class WalksInteractorDefault: WalksInteractor {
@@ -28,6 +30,7 @@ class WalksInteractorDefault: WalksInteractor {
     func createWalk(withDate date: Date) -> Walk {
         let walk = NSEntityDescription.insertNewObject(forEntityName: "Walk", into: context) as! Walk
         walk.date = date as NSDate
+        walk.startOfDay = Calendar.current.startOfDay(for: date) as NSDate
         return walk
     }
     
@@ -47,7 +50,7 @@ class WalksInteractorDefault: WalksInteractor {
     }
     
     func fetchWalks(atDate searchDate: Date) -> [Walk] {
-        let fetchRequest: NSFetchRequest<Walk> = Walk.fetchRequest()
+        let walkFetchRequest: NSFetchRequest<Walk> = Walk.fetchRequest()
         
         let calendar = Calendar.current
         let startDateOfTheDay = calendar.startOfDay(for: searchDate)
@@ -55,18 +58,40 @@ class WalksInteractorDefault: WalksInteractor {
         
         let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", startDateOfTheDay as NSDate, endDateOfTheDay as NSDate)
         
-        fetchRequest.predicate = predicate
+        walkFetchRequest.predicate = predicate
         
         do {
-            return try context.fetch(fetchRequest)
+            return try context.fetch(walkFetchRequest)
+        } catch let error {
+            print(error.localizedDescription)
+        }
+        return []
+    }
+    
+    func fetchDistances(atDates range: ClosedRange<Date>) -> [DistanceAtDay] {
+        let walkFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Walk")
+        walkFetchRequest.resultType = .dictionaryResultType
+        
+        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", range.lowerBound as NSDate, range.upperBound as NSDate)
+        walkFetchRequest.predicate = predicate
+        
+        let totalDistanceForDayExpressionDescription = NSExpressionDescription()
+        totalDistanceForDayExpressionDescription.name = "totalDistance"
+        totalDistanceForDayExpressionDescription.expression = NSExpression(format: "sum:(distance)")
+        totalDistanceForDayExpressionDescription.expressionResultType = .doubleAttributeType
+        
+        walkFetchRequest.propertiesToFetch = ["startOfDay", totalDistanceForDayExpressionDescription]
+        walkFetchRequest.propertiesToGroupBy = ["startOfDay"]
+        do {
+            let results = try context.fetch(walkFetchRequest) as! [[String: Any]]
+            return results.map({ dictionary in
+                return DistanceAtDay(startOfDay: dictionary["startOfDay"] as! Date, totalDistance: dictionary["totalDistance"] as! Double)
+            })
+            
         } catch let error {
             print(error.localizedDescription)
         }
         
-        return []
-    }
-    
-    func fetchDistance(atDates: Range<Date>) -> [Double] {
         return []
     }
     

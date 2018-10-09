@@ -7,12 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C00EB3B216C6C5F00653008 /* RecordingPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C00EB3A216C6C5F00653008 /* RecordingPresenter.swift */; };
 		2C080C062167E24C0018B1B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C052167E24C0018B1B8 /* AppDelegate.swift */; };
 		2C080C082167E24C0018B1B8 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C072167E24C0018B1B8 /* ViewController.swift */; };
 		2C080C0B2167E24C0018B1B8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C092167E24C0018B1B8 /* Main.storyboard */; };
 		2C080C102167E24C0018B1B8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C0F2167E24C0018B1B8 /* Assets.xcassets */; };
 		2C080C132167E24C0018B1B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C112167E24C0018B1B8 /* LaunchScreen.storyboard */; };
-		2C080C242167E8250018B1B8 /* LocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C232167E8250018B1B8 /* LocationProvider.swift */; };
+		2C080C242167E8250018B1B8 /* LocationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C232167E8250018B1B8 /* LocationInteractor.swift */; };
+		2C0CBC01216B4F0F00BA648B /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBC00216B4F0F00BA648B /* RecordButton.swift */; };
+		2C11289C216AA7EE0027FDBE /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11289B216AA7EE0027FDBE /* GraphView.swift */; };
+		2C11289E216AA8520027FDBE /* RoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11289D216AA8520027FDBE /* RoundedView.swift */; };
 		2C87718A216A409E0080707A /* walkie.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C877188216A409E0080707A /* walkie.xcdatamodeld */; };
 		2C87718C216A45E40080707A /* WalksInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C87718B216A45E40080707A /* WalksInteractor.swift */; };
 		2CFFF2A3216A5A6200E0044E /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CFFF2A2216A5A6200E0044E /* CoreDataStack.swift */; };
@@ -23,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C00EB3A216C6C5F00653008 /* RecordingPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordingPresenter.swift; sourceTree = "<group>"; };
 		2C080C022167E24C0018B1B8 /* walkie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = walkie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C080C052167E24C0018B1B8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		2C080C072167E24C0018B1B8 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -30,7 +35,10 @@
 		2C080C0F2167E24C0018B1B8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2C080C122167E24C0018B1B8 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		2C080C142167E24C0018B1B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		2C080C232167E8250018B1B8 /* LocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationProvider.swift; sourceTree = "<group>"; };
+		2C080C232167E8250018B1B8 /* LocationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInteractor.swift; sourceTree = "<group>"; };
+		2C0CBC00216B4F0F00BA648B /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		2C11289B216AA7EE0027FDBE /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
+		2C11289D216AA8520027FDBE /* RoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedView.swift; sourceTree = "<group>"; };
 		2C877189216A409E0080707A /* walkie.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = walkie.xcdatamodel; sourceTree = "<group>"; };
 		2C87718B216A45E40080707A /* WalksInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalksInteractor.swift; sourceTree = "<group>"; };
 		2CFFF2A2216A5A6200E0044E /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
@@ -51,6 +59,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2C04536A216BBA6A0065F05A /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				2C11289B216AA7EE0027FDBE /* GraphView.swift */,
+				2C11289D216AA8520027FDBE /* RoundedView.swift */,
+				2C0CBC00216B4F0F00BA648B /* RecordButton.swift */,
+			);
+			path = "Custom Views";
+			sourceTree = "<group>";
+		};
 		2C080BF92167E24C0018B1B8 = {
 			isa = PBXGroup;
 			children = (
@@ -70,6 +88,7 @@
 		2C080C042167E24C0018B1B8 /* walkie */ = {
 			isa = PBXGroup;
 			children = (
+				2C04536A216BBA6A0065F05A /* Custom Views */,
 				2C080C222167E8150018B1B8 /* Interactor */,
 				2C080C1D2167E6BD0018B1B8 /* Presenter */,
 				2C080C1C2167E6B70018B1B8 /* View */,
@@ -93,6 +112,7 @@
 		2C080C1D2167E6BD0018B1B8 /* Presenter */ = {
 			isa = PBXGroup;
 			children = (
+				2C00EB3A216C6C5F00653008 /* RecordingPresenter.swift */,
 			);
 			path = Presenter;
 			sourceTree = "<group>";
@@ -109,7 +129,7 @@
 		2C877184216A31F60080707A /* Location */ = {
 			isa = PBXGroup;
 			children = (
-				2C080C232167E8250018B1B8 /* LocationProvider.swift */,
+				2C080C232167E8250018B1B8 /* LocationInteractor.swift */,
 			);
 			path = Location;
 			sourceTree = "<group>";
@@ -223,11 +243,15 @@
 				2C87718A216A409E0080707A /* walkie.xcdatamodeld in Sources */,
 				2C080C082167E24C0018B1B8 /* ViewController.swift in Sources */,
 				2CFFF2C3216A824900E0044E /* Walk+CoreDataProperties.swift in Sources */,
+				2C11289C216AA7EE0027FDBE /* GraphView.swift in Sources */,
+				2C0CBC01216B4F0F00BA648B /* RecordButton.swift in Sources */,
 				2CFFF2C5216A824900E0044E /* Coordinate+CoreDataProperties.swift in Sources */,
 				2C080C062167E24C0018B1B8 /* AppDelegate.swift in Sources */,
 				2CFFF2C4216A824900E0044E /* Coordinate+CoreDataClass.swift in Sources */,
-				2C080C242167E8250018B1B8 /* LocationProvider.swift in Sources */,
+				2C080C242167E8250018B1B8 /* LocationInteractor.swift in Sources */,
+				2C11289E216AA8520027FDBE /* RoundedView.swift in Sources */,
 				2C87718C216A45E40080707A /* WalksInteractor.swift in Sources */,
+				2C00EB3B216C6C5F00653008 /* RecordingPresenter.swift in Sources */,
 				2CFFF2C2216A824900E0044E /* Walk+CoreDataClass.swift in Sources */,
 				2CFFF2A3216A5A6200E0044E /* CoreDataStack.swift in Sources */,
 			);
