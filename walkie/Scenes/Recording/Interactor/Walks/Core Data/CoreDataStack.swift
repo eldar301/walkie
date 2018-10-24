@@ -11,7 +11,7 @@ import CoreData
 
 class CoreDataStack {
     
-    lazy var persistentContainer: NSPersistentContainer = {
+    static var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "walkie")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -21,7 +21,7 @@ class CoreDataStack {
         return container
     }()
     
-    func saveContext () {
+    static func saveContext () {
         let context = persistentContainer.viewContext
         if context.hasChanges {
             do {

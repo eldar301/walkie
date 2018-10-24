@@ -9,28 +9,24 @@
 import Foundation
 import CoreData
 
-typealias DistanceAtDay = (startOfDay: Date, totalDistance: Double)
-
 protocol WalksInteractor: class {
     func createWalk(withDate: Date) -> Walk
     func createCoordinate(atLatitude: Double, longitude: Double) -> Coordinate
     func save()
     func fetchWalks(atDate: Date) -> [Walk]
-    func fetchDistances(atDates: ClosedRange<Date>) -> [DistanceAtDay]
+    func fetchDistances(atDates: ClosedRange<Date>) -> [Date: Double]
 }
 
 class WalksInteractorDefault: WalksInteractor {
     
-    private let coreDataStack = CoreDataStack()
-    
     private var context: NSManagedObjectContext {
-        return coreDataStack.persistentContainer.viewContext
+        return CoreDataStack.persistentContainer.viewContext
     }
     
     func createWalk(withDate date: Date) -> Walk {
         let walk = NSEntityDescription.insertNewObject(forEntityName: "Walk", into: context) as! Walk
-        walk.date = date as NSDate
-        walk.startOfDay = Calendar.current.startOfDay(for: date) as NSDate
+        walk.date = date
+        walk.startOfDay = Calendar.current.startOfDay(for: date)
         return walk
     }
     
@@ -65,10 +61,11 @@ class WalksInteractorDefault: WalksInteractor {
         } catch let error {
             print(error.localizedDescription)
         }
+        
         return []
     }
     
-    func fetchDistances(atDates range: ClosedRange<Date>) -> [DistanceAtDay] {
+    func fetchDistances(atDates range: ClosedRange<Date>) -> [Date: Double] {
         let walkFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Walk")
         walkFetchRequest.resultType = .dictionaryResultType
         
@@ -84,15 +81,15 @@ class WalksInteractorDefault: WalksInteractor {
         walkFetchRequest.propertiesToGroupBy = ["startOfDay"]
         do {
             let results = try context.fetch(walkFetchRequest) as! [[String: Any]]
-            return results.map({ dictionary in
-                return DistanceAtDay(startOfDay: dictionary["startOfDay"] as! Date, totalDistance: dictionary["totalDistance"] as! Double)
+            return results.reduce(into: [Date: Double](), { result, dict in
+                result[dict["startOfDay"] as! Date] = (dict["totalDistance"] as! Double)
             })
             
         } catch let error {
             print(error.localizedDescription)
         }
         
-        return []
+        return [:]
     }
     
 }

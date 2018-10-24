@@ -32,7 +32,7 @@ class LocationInteractorDefault: NSObject, LocationInteractor {
         let locationManager = CLLocationManager()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.delegate = self
-        locationManager.allowsBackgroundLocationUpdates = true
+//        locationManager.allowsBackgroundLocationUpdates = true
         return locationManager
     }()
     
@@ -70,6 +70,12 @@ extension LocationInteractorDefault: CLLocationManagerDelegate {
         }
         
         let distanceDifference = previousLocation?.distance(from: currentLocation) ?? 0
+        
+        print(currentLocation.horizontalAccuracy)
+        
+//        guard distanceDifference >= 0.5 * currentLocation.horizontalAccuracy else {
+//            return
+//        }
         
         delegate?.update(withNewLatitude: currentLocation.coordinate.latitude,
                          longitude: currentLocation.coordinate.longitude,

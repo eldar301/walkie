@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Recording View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="walkie" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="RecordingViewController" customModule="walkie" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -81,7 +81,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIf-3t-6i6" customClass="RoundedView" customModule="walkie" customModuleProvider="target">
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIf-3t-6i6" customClass="RoundedView" customModule="walkie" customModuleProvider="target">
                                 <rect key="frame" x="8" y="300.5" width="304" height="79"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="WWz-n7-83m">
@@ -175,8 +175,12 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="currentWalkDistanceLabel" destination="7cB-I3-Lvg" id="IZv-1K-TGH"/>
                         <outlet property="currentWalkDistanceView" destination="JIf-3t-6i6" id="yht-eR-HnO"/>
                         <outlet property="graphView" destination="WNs-Sb-nNW" id="mUO-LO-Bcc"/>
+                        <outlet property="recordButton" destination="2o7-wi-646" id="kJQ-6a-YjD"/>
+                        <outlet property="todayComparisonLabel" destination="7Ew-RJ-bp0" id="7dA-XX-a5p"/>
+                        <outlet property="todayCoveredDistanceLabel" destination="WFx-82-0Pu" id="xSS-rw-mjZ"/>
                         <outlet property="todayCoveredDistanceView" destination="kJQ-ac-eXu" id="o5P-CH-vSl"/>
                     </connections>
                 </viewController>

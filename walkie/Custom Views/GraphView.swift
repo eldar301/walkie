@@ -12,8 +12,8 @@ fileprivate struct Constants {
     static let totalWeekdaysPresentable = 7
     static let leftMargin: CGFloat = 8.0
     static let graphLeftMargin: CGFloat = 16.0
-    static let rightMargin: CGFloat = 32.0
-    static let graphRightMargin: CGFloat = 40.0
+    static let rightMargin: CGFloat = 40.0
+    static let graphRightMargin: CGFloat = 48.0
     static let topMargin: CGFloat = 16.0
     static let bottomMargin: CGFloat = 8.0
     static let graphBottomMargin: CGFloat = 30.0
@@ -51,15 +51,15 @@ class GraphView: RoundedView {
         }
     }
     
-    private var distancesByDays: [Double] = [7, 22, 0, 0, 15, 6, 16]
+    var distancesByDays: [[Date: Double]] = []
     
-    func update(withDistancesByDays distancesByDays: [Double]) {
+    func update(withDistancesByDays distancesByDays: [[Date: Double]]) {
         self.distancesByDays = distancesByDays
         setNeedsDisplay()
     }
     
     override func draw(_ rect: CGRect) {
-        if let maximumDistance = distancesByDays.max(), maximumDistance > 0 {
+        if let maximumDistance = distancesByDays.max(by: { $0.first!.value < $1.first!.value })?.first?.value, maximumDistance > 0 {
             // Background lines
             let backgroundLinesPath = UIBezierPath()
             backgroundLinesPath.lineWidth = 1.5
@@ -72,8 +72,8 @@ class GraphView: RoundedView {
                 let font = UIFont(name: "AvenirNext-Regular", size: 10)!
                 let attributes = [NSAttributedString.Key.font: font,
                                   NSAttributedString.Key.foregroundColor: graphColor]
-                let valueString = "\(value)" as NSString
-                valueString.draw(at: CGPoint(x: self.bounds.width - Constants.graphRightMargin + 12,
+                let valueString = "\(DistanceToStringCoverter.stringDistance(fromDistance: value))" as NSString
+                valueString.draw(at: CGPoint(x: self.bounds.width - Constants.graphRightMargin + 10,
                                              y: yPosition - valueString.size(withAttributes: attributes).height / 2), withAttributes: attributes)
                 
                 backgroundLinesPath.move(to: CGPoint(x: Constants.leftMargin, y: yPosition))
@@ -88,14 +88,14 @@ class GraphView: RoundedView {
             graphPath.lineWidth = graphLineWidth
             
             let firstDistancePoint = CGPoint(x: calculateGraphX(forDayIndex: 0),
-                                             y: calculateGraphY(forDistance: distancesByDays.first!, whereMaximumIs: maximumDistance))
+                                             y: calculateGraphY(forDistance: distancesByDays.first!.first!.value, whereMaximumIs: maximumDistance))
             graphPath.move(to: firstDistancePoint)
             
             var dots: [UIBezierPath] = []
             
             for (weekdayIndex, distance) in distancesByDays.enumerated() {
                 let position = CGPoint(x: calculateGraphX(forDayIndex: weekdayIndex),
-                                       y: calculateGraphY(forDistance: distance, whereMaximumIs: maximumDistance))
+                                       y: calculateGraphY(forDistance: distance.first!.value, whereMaximumIs: maximumDistance))
                 
                 // Graph peak dot
                 let dotRect = CGRect(origin: position, size: dotSize).offsetBy(dx: -dotSize.width / 2, dy: -dotSize.height / 2)
@@ -119,7 +119,9 @@ class GraphView: RoundedView {
         let attributes = [NSAttributedString.Key.font: font,
                           NSAttributedString.Key.foregroundColor: graphColor]
         
-        let weekdays: [NSString] = ["M", "T", "W", "T", "F", "S", "S"]
+        let calendar = Calendar.current
+        
+        let weekdays: [NSString] = distancesByDays.map { calendar.veryShortWeekdaySymbols[calendar.component(.weekday, from: $0.keys.first!) - 1] as NSString }
         for (index, weekday) in weekdays.enumerated() {
             weekday.draw(at: CGPoint(x: calculateGraphX(forDayIndex: index) - weekday.size(withAttributes: attributes).width / 2,
                                      y: self.bounds.height - Constants.graphBottomMargin + 5), withAttributes: attributes)

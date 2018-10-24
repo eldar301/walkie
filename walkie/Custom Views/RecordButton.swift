@@ -12,6 +12,7 @@ fileprivate struct Constants {
     static let roundRectOffset: CGFloat = 3.0
     static let roundedSquareScale: CGFloat = 0.5
 }
+
 @IBDesignable
 class RecordButton: UIButton {
     
