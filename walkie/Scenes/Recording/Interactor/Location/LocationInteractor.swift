@@ -10,12 +10,14 @@ import Foundation
 import CoreLocation
 
 protocol LocationInteractorDelegate: class {
-    func locationProviderDidStartUpdate()
-    func locationProviderDidStopUpdate()
-    func update(withNewLatitude: Double, longitude: Double, distanceDifference: Double)
+    func didStartUpdateLocation(atLatitude: Double?, longitude: Double?)
+    func didStopUpdateLocation()
+    func update(withNewLatitude: Double, longitude: Double, distance: Double, accuracy: Double)
+    func locationAccessNotGranted()
 }
 
 protocol LocationInteractor: class {
+    
     var delegate: LocationInteractorDelegate? { get set }
     
     func startUpdate()
@@ -26,15 +28,15 @@ class LocationInteractorDefault: NSObject, LocationInteractor {
     
     weak var delegate: LocationInteractorDelegate?
     
-    private var previousLocation: CLLocation?
-    
     private lazy var locationManager: CLLocationManager = {
         let locationManager = CLLocationManager()
         locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
         locationManager.delegate = self
-//        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.allowsBackgroundLocationUpdates = true
         return locationManager
     }()
+    
+    private var previousLocaition: CLLocation?
     
     func startUpdate() {
         let status = CLLocationManager.authorizationStatus()
@@ -44,20 +46,23 @@ class LocationInteractorDefault: NSObject, LocationInteractor {
             locationManager.requestWhenInUseAuthorization()
             
         case .denied, .restricted:
-            // FIXME: handle restricted status
-            fatalError("FIXME: handle restricted status")
+            delegate?.locationAccessNotGranted()
+            return
             
         default:
             break
         }
         
         locationManager.startUpdatingLocation()
-        delegate?.locationProviderDidStartUpdate()
+        
+        let coordinate = locationManager.location?.coordinate
+            
+        delegate?.didStartUpdateLocation(atLatitude: coordinate?.latitude, longitude: coordinate?.longitude)
     }
     
     func stopUpdate() {
         locationManager.stopUpdatingLocation()
-        delegate?.locationProviderDidStopUpdate()
+        delegate?.didStopUpdateLocation()
     }
     
 }
@@ -69,19 +74,17 @@ extension LocationInteractorDefault: CLLocationManagerDelegate {
             return
         }
         
-        let distanceDifference = previousLocation?.distance(from: currentLocation) ?? 0
-        
-        print(currentLocation.horizontalAccuracy)
-        
-//        guard distanceDifference >= 0.5 * currentLocation.horizontalAccuracy else {
-//            return
-//        }
-        
+        var distanceDifference = 0.0
+        if let previousLocation = self.previousLocaition {
+            distanceDifference = previousLocation.distance(from: currentLocation)
+        }
+
         delegate?.update(withNewLatitude: currentLocation.coordinate.latitude,
                          longitude: currentLocation.coordinate.longitude,
-                         distanceDifference: distanceDifference)
+                         distance: distanceDifference,
+                         accuracy: currentLocation.horizontalAccuracy)
         
-        previousLocation = currentLocation
+        previousLocaition = currentLocation
     }
     
 }

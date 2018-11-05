@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.15" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.9"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -32,7 +33,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJQ-ac-eXu" customClass="RoundedView" customModule="walkie" customModuleProvider="target">
+                            <view clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kJQ-ac-eXu">
                                 <rect key="frame" x="8" y="178" width="304" height="114.5"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="huJ-a1-1Ue">
@@ -66,6 +67,11 @@
                                                 </variation>
                                             </label>
                                         </subviews>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                     </stackView>
                                 </subviews>
                                 <color key="backgroundColor" red="0.20000000000000001" green="0.63137254899999995" blue="0.99215686270000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -81,7 +87,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </view>
-                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIf-3t-6i6" customClass="RoundedView" customModule="walkie" customModuleProvider="target">
+                            <view hidden="YES" clipsSubviews="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIf-3t-6i6">
                                 <rect key="frame" x="8" y="300.5" width="304" height="79"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="WWz-n7-83m">
@@ -125,33 +131,21 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Roa-L5-n15">
                                 <rect key="frame" x="8" y="387.5" width="304" height="172.5"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2o7-wi-646" customClass="RecordButton" customModule="walkie" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ulx-Ay-xOW" customClass="RecordButton" customModule="walkie" customModuleProvider="target">
                                         <rect key="frame" x="112" y="46.5" width="80" height="80"/>
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="80" id="Op9-qX-y6V"/>
-                                            <constraint firstAttribute="width" secondItem="2o7-wi-646" secondAttribute="height" id="SVh-DJ-Qr7"/>
+                                            <constraint firstAttribute="width" constant="80" id="M5f-YU-3vB"/>
+                                            <constraint firstAttribute="width" secondItem="ulx-Ay-xOW" secondAttribute="height" id="v3j-h1-VGX"/>
                                         </constraints>
-                                        <state key="normal">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="circleRadius">
-                                                <real key="value" value="31"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="circleLineWidth">
-                                                <real key="value" value="4"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="boolean" keyPath="recording" value="NO"/>
-                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="oOd-ot-9ad"/>
+                                            <action selector="record:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9cd-9a-gu3"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstItem="2o7-wi-646" firstAttribute="centerY" secondItem="Roa-L5-n15" secondAttribute="centerY" id="bXO-BL-a8E"/>
-                                    <constraint firstItem="2o7-wi-646" firstAttribute="centerX" secondItem="Roa-L5-n15" secondAttribute="centerX" id="gee-gf-00B"/>
+                                    <constraint firstItem="ulx-Ay-xOW" firstAttribute="centerX" secondItem="Roa-L5-n15" secondAttribute="centerX" id="0Ck-j4-RQF"/>
+                                    <constraint firstItem="ulx-Ay-xOW" firstAttribute="centerY" secondItem="Roa-L5-n15" secondAttribute="centerY" id="J9x-DM-V8Y"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -178,7 +172,7 @@
                         <outlet property="currentWalkDistanceLabel" destination="7cB-I3-Lvg" id="IZv-1K-TGH"/>
                         <outlet property="currentWalkDistanceView" destination="JIf-3t-6i6" id="yht-eR-HnO"/>
                         <outlet property="graphView" destination="WNs-Sb-nNW" id="mUO-LO-Bcc"/>
-                        <outlet property="recordButton" destination="2o7-wi-646" id="kJQ-6a-YjD"/>
+                        <outlet property="recordButton" destination="ulx-Ay-xOW" id="6GY-OT-yHB"/>
                         <outlet property="todayComparisonLabel" destination="7Ew-RJ-bp0" id="7dA-XX-a5p"/>
                         <outlet property="todayCoveredDistanceLabel" destination="WFx-82-0Pu" id="xSS-rw-mjZ"/>
                         <outlet property="todayCoveredDistanceView" destination="kJQ-ac-eXu" id="o5P-CH-vSl"/>

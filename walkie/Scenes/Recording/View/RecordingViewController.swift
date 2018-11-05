@@ -14,16 +14,16 @@ class RecordingViewController: UIViewController {
     
     @IBOutlet weak var graphView: GraphView!
     
-    @IBOutlet weak var todayCoveredDistanceView: RoundedView!
+    @IBOutlet weak var todayCoveredDistanceView: UIView!
     @IBOutlet weak var todayCoveredDistanceLabel: UILabel!
     @IBOutlet weak var todayComparisonLabel: UILabel!
 
-    @IBOutlet weak var currentWalkDistanceView: RoundedView!
+    @IBOutlet weak var currentWalkDistanceView: UIView!
     @IBOutlet weak var currentWalkDistanceLabel: UILabel!
     
     @IBOutlet weak var recordButton: RecordButton!
     
-    private let presenter = RecordingPresenterDefault(locationInteractor: LocationInteractorDefault(), walksInteractor: WalksInteractorDefault())
+    var presenter: RecordingPresenter!
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
@@ -32,36 +32,56 @@ class RecordingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        for view in [graphView, todayCoveredDistanceView, currentWalkDistanceView] {
+        graphView.layer.cornerRadius = 10.0
+        todayCoveredDistanceView.layer.cornerRadius = 10.0
+        currentWalkDistanceView.layer.cornerRadius = 10.0
+        
+        let router = Router(viewController: self)
+        router.setupRootScene()
+        
+        for view in [todayCoveredDistanceView, currentWalkDistanceView] {
             let tapGestureRecognier = UITapGestureRecognizer(target: self, action: #selector(showDetails(tapGestureRecognier:)))
             view?.addGestureRecognizer(tapGestureRecognier)
         }
         
+        graphView.addTarget(self, action: #selector(showWeekDetails), for: .touchUpInside)
+        
         presenter.view = self
     }
     
+    @objc func showWeekDetails() {
+        guard let index = graphView.pickedIndex else {
+            return
+        }
+        
+        presenter.showDetails(ofWalksOfTheWeekdayAtIndex: index)
+        
+        bumpAnimation(withView: graphView)
+    }
+    
     @objc func showDetails(tapGestureRecognier: UITapGestureRecognizer) {
-        let view = tapGestureRecognier.view
+        let view = tapGestureRecognier.view!
         
         switch view {
-        case graphView:
-            presenter.showDetails(ofWalksOfTheWeekdayAtIndex: 0)
-            
         case todayCoveredDistanceView:
             presenter.showDetailsOfTodayWalks()
             
         case currentWalkDistanceView:
             presenter.showDetailsOfCurrentWalk()
             
-        default: fatalError()
+        default: return
         }
         
+        bumpAnimation(withView: view)
+    }
+    
+    private func bumpAnimation(withView view: UIView) {
         let animation = CABasicAnimation(keyPath: "transform.scale")
         animation.fromValue = 1.0
         animation.toValue = 0.95
         animation.autoreverses = true
         animation.duration = 0.1
-        view?.layer.add(animation, forKey: nil)
+        view.layer.add(animation, forKey: nil)
     }
     
     @IBAction func record(_ sender: RecordButton) {
@@ -75,6 +95,16 @@ class RecordingViewController: UIViewController {
 }
 
 extension RecordingViewController: RecordingView {
+    
+    func show(error: PresenterError) {
+        switch error {
+        case .locationAccessNotGranted:
+            self.showError(withMessage: "Location access not granted")
+            
+        case .motionAccessNotGranted:
+            graphView.showError(withMessage: "Location access not granted")
+        }
+    }
     
     func didStartRecording() {
         currentWalkDistanceView.isHidden = false
@@ -90,18 +120,20 @@ extension RecordingViewController: RecordingView {
         currentWalkDistanceLabel.text = DistanceToStringCoverter.stringDistance(fromDistance: currentWalkDistance)
     }
     
-    func update(todayTotalDistance: Double, whenAverage averageAtWeek: Double) {
+    func update(todayTotalDistance: Double) {
         todayCoveredDistanceLabel.text = DistanceToStringCoverter.stringDistance(fromDistance: todayTotalDistance)
-        let stringAverageAtWeek = DistanceToStringCoverter.stringDistance(fromDistance: averageAtWeek)
-        if todayTotalDistance > averageAtWeek {
+    }
+    
+    func update(weekStatistics: [[Int : Double]], weekAverageDistance: Double, todayTotalDistance: Double) {
+        graphView.distancesByDays = weekStatistics
+        
+        let stringAverageAtWeek = DistanceToStringCoverter.stringDistance(fromDistance: weekAverageDistance)
+        if todayTotalDistance > weekAverageDistance {
             todayComparisonLabel.text = "More than average \(stringAverageAtWeek)"
         } else {
             todayComparisonLabel.text = "Move on! Average is \(stringAverageAtWeek)"
         }
-    }
-    
-    func update(weekStatistics: [[Date : Double]]) {
-        graphView.update(withDistancesByDays: weekStatistics)
+
     }
     
 }

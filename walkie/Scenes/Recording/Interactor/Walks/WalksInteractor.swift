@@ -12,9 +12,9 @@ import CoreData
 protocol WalksInteractor: class {
     func createWalk(withDate: Date) -> Walk
     func createCoordinate(atLatitude: Double, longitude: Double) -> Coordinate
+    func fetchWalks(withDateComponents: DateComponents) -> [Walk]
+    func delete(walk: Walk)
     func save()
-    func fetchWalks(atDate: Date) -> [Walk]
-    func fetchDistances(atDates: ClosedRange<Date>) -> [Date: Double]
 }
 
 class WalksInteractorDefault: WalksInteractor {
@@ -24,36 +24,26 @@ class WalksInteractorDefault: WalksInteractor {
     }
     
     func createWalk(withDate date: Date) -> Walk {
-        let walk = NSEntityDescription.insertNewObject(forEntityName: "Walk", into: context) as! Walk
+        let walk = Walk(context: context)
         walk.date = date
-        walk.startOfDay = Calendar.current.startOfDay(for: date)
         return walk
     }
     
     func createCoordinate(atLatitude latitude: Double, longitude: Double) -> Coordinate {
-        let coordinate = NSEntityDescription.insertNewObject(forEntityName: "Coordinate", into: context) as! Coordinate
+        let coordinate = Coordinate(context: context)
         coordinate.latitude = latitude
         coordinate.longitude = longitude
         return coordinate
     }
     
-    func save() {
-        do {
-            try context.save()
-        } catch let error {
-            print(error.localizedDescription)
-        }
-    }
-    
-    func fetchWalks(atDate searchDate: Date) -> [Walk] {
+    func fetchWalks(withDateComponents dateComponents: DateComponents) -> [Walk] {
         let walkFetchRequest: NSFetchRequest<Walk> = Walk.fetchRequest()
         
         let calendar = Calendar.current
-        let startDateOfTheDay = calendar.startOfDay(for: searchDate)
+        let startDateOfTheDay = calendar.startOfDay(for: calendar.date(from: dateComponents)!)
         let endDateOfTheDay = calendar.date(byAdding: .day, value: 1, to: startDateOfTheDay)!
         
-        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", startDateOfTheDay as NSDate, endDateOfTheDay as NSDate)
-        
+        let predicate = NSPredicate(format: "(date >= %@) AND (date < %@)", startDateOfTheDay as NSDate, endDateOfTheDay as NSDate)
         walkFetchRequest.predicate = predicate
         
         do {
@@ -65,31 +55,16 @@ class WalksInteractorDefault: WalksInteractor {
         return []
     }
     
-    func fetchDistances(atDates range: ClosedRange<Date>) -> [Date: Double] {
-        let walkFetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "Walk")
-        walkFetchRequest.resultType = .dictionaryResultType
-        
-        let predicate = NSPredicate(format: "(date >= %@) AND (date <= %@)", range.lowerBound as NSDate, range.upperBound as NSDate)
-        walkFetchRequest.predicate = predicate
-        
-        let totalDistanceForDayExpressionDescription = NSExpressionDescription()
-        totalDistanceForDayExpressionDescription.name = "totalDistance"
-        totalDistanceForDayExpressionDescription.expression = NSExpression(format: "sum:(distance)")
-        totalDistanceForDayExpressionDescription.expressionResultType = .doubleAttributeType
-        
-        walkFetchRequest.propertiesToFetch = ["startOfDay", totalDistanceForDayExpressionDescription]
-        walkFetchRequest.propertiesToGroupBy = ["startOfDay"]
+    func delete(walk: Walk) {
+        context.delete(walk)
+    }
+    
+    func save() {
         do {
-            let results = try context.fetch(walkFetchRequest) as! [[String: Any]]
-            return results.reduce(into: [Date: Double](), { result, dict in
-                result[dict["startOfDay"] as! Date] = (dict["totalDistance"] as! Double)
-            })
-            
+            try context.save()
         } catch let error {
             print(error.localizedDescription)
         }
-        
-        return [:]
     }
     
 }

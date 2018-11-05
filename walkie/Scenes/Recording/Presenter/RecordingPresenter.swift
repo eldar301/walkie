@@ -8,12 +8,23 @@
 
 import Foundation
 
+extension Notification.Name {
+    static let currentWalkDidUpdate = Notification.Name("currentWalkDidAddCoordinate")
+}
+
+enum PresenterError {
+    case locationAccessNotGranted
+    case motionAccessNotGranted
+}
+
+
 protocol RecordingView: class {
     func didStartRecording()
     func didStopRecording()
+    func show(error: PresenterError)
     func update(currentWalkDistance: Double)
-    func update(todayTotalDistance: Double, whenAverage: Double)
-    func update(weekStatistics: [[Date: Double]])
+    func update(todayTotalDistance: Double)
+    func update(weekStatistics: [[Int: Double]], weekAverageDistance: Double, todayTotalDistance: Double)
 }
 
 protocol RecordingPresenter {
@@ -28,37 +39,56 @@ protocol RecordingPresenter {
 
 class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
     
+    private let router: Router
+    
     private let locationInteractor: LocationInteractor
+    private let movementInteractor: MovementInteractor
     private let walksInteractor: WalksInteractor
     
-    private var averageWeekDistance: Double = 0
-    private var todayCoveredDistance: Double = 0
-    private var fetchedWeekdayDates: [Date] = []
-    
-    init(locationInteractor: LocationInteractor, walksInteractor: WalksInteractor) {
+    init(router: Router, locationInteractor: LocationInteractor, movementInteractor: MovementInteractor, walksInteractor: WalksInteractor) {
+        self.router = router
         self.locationInteractor = locationInteractor
+        self.movementInteractor = movementInteractor
         self.walksInteractor = walksInteractor
         
-        locationInteractor.delegate = self
+        self.movementInteractor.delegate = self
+        self.locationInteractor.delegate = self
     }
+    
+    private var fetchedWeekStatistics: [[Date: Double]] = []
+    private var todayCoveredDistance: Double = 0
+    private var currentWalkDistance: Double = 0
+    
+    private var isRecording = false
     
     var walksToShow: [Walk]?
     
     weak var view: RecordingView? {
         didSet {
-            fetchAndUpdateStatistics()
+            fetchStatistics()
         }
     }
     
     private var currentWalk: Walk?
     
     func startRecording() {
+        currentWalkDistance = 0
         currentWalk = walksInteractor.createWalk(withDate: Date())
+        
+        movementInteractor.startUpdate()
         locationInteractor.startUpdate()
+        
+        view?.update(currentWalkDistance: currentWalkDistance)
     }
     
     func stopRecording() {
-        walksInteractor.save()
+        if let currentWalk = currentWalk {
+            if (currentWalk.coordinates?.count ?? 0) < 2 {
+                walksInteractor.delete(walk: currentWalk)
+            }
+        }
+        
+        movementInteractor.stopUpdate()
         locationInteractor.stopUpdate()
     }
     
@@ -68,65 +98,105 @@ class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
         }
         
         walksToShow = [currentWalk]
+        
+        router.showMapScene(input: self, autoupdates: true)
     }
     
     func showDetailsOfTodayWalks() {
-        walksToShow = walksInteractor.fetchWalks(atDate: Date())
+        walksToShow = walksInteractor.fetchWalks(withDateComponents: Calendar.current.dateComponents([.year, .month, .day], from: Date()))
+        
+        router.showMapScene(input: self, autoupdates: isRecording)
     }
     
     func showDetails(ofWalksOfTheWeekdayAtIndex index: Int) {
-        walksToShow = walksInteractor.fetchWalks(atDate: fetchedWeekdayDates[index])
-    }
-    
-    private func fetchAndUpdateStatistics() {
-        fetchedWeekdayDates = []
-        let currentDate = Date()
-        
-        let calendar = Calendar.current
-        let currentDateStartOfDay = calendar.startOfDay(for: currentDate)
-        let fromDate = calendar.date(byAdding: .day, value: -6, to: currentDateStartOfDay)!
-        let toDate = calendar.date(byAdding: .day, value: 1, to: currentDateStartOfDay)!
-        
-        let statistics = walksInteractor.fetchDistances(atDates: fromDate...toDate)
-        
-        todayCoveredDistance = (statistics[currentDateStartOfDay] ?? 0) + (currentWalk?.distance ?? 0)
-        averageWeekDistance = (statistics.reduce(0.0, { $0 + $1.value }) + (currentWalk?.distance ?? 0)) / 7
-        
-        view?.update(todayTotalDistance: todayCoveredDistance, whenAverage: averageWeekDistance)
-        
-        var sortedStatistics: [[Date: Double]] = []
-        for date in fromDate ..< toDate {
-            fetchedWeekdayDates.append(date)
-            sortedStatistics.append([date: statistics[date] ?? 0])
+        guard let date = fetchedWeekStatistics[index].first?.key else {
+            return
         }
         
-        view?.update(weekStatistics: sortedStatistics)
+        walksToShow = walksInteractor.fetchWalks(withDateComponents: Calendar.current.dateComponents([.year, .month, .day], from: date))
+        
+        router.showMapScene(input: self, autoupdates: index == 6)
     }
     
-    deinit {
-        walksInteractor.save()
+    private func fetchStatistics() {
+        movementInteractor.fetchLastWeekStatistics()
     }
     
 }
 
 extension RecordingPresenterDefault: LocationInteractorDelegate {
-    
-    func locationProviderDidStartUpdate() {
+
+    func didStartUpdateLocation(atLatitude latitude: Double?, longitude: Double?) {
+        isRecording = true
+        
+        if let latitude = latitude, let longitude = longitude {
+            let coordinate = walksInteractor.createCoordinate(atLatitude: latitude, longitude: longitude)
+            currentWalk?.addToCoordinates(coordinate)
+        }
+        
         view?.didStartRecording()
     }
     
-    func locationProviderDidStopUpdate() {
+    func didStopUpdateLocation() {
+        isRecording = false
+        
         view?.didStopRecording()
     }
     
-    func update(withNewLatitude latitude: Double, longitude: Double, distanceDifference: Double) {
+    func update(withNewLatitude latitude: Double, longitude: Double, distance: Double, accuracy: Double) {
+        guard 0 ... 30.0 ~= accuracy else {
+            return
+        }
+        
+        print(latitude, longitude, distance, accuracy)
+        
         let coordinate = walksInteractor.createCoordinate(atLatitude: latitude, longitude: longitude)
         currentWalk?.addToCoordinates(coordinate)
-        currentWalk?.distance += distanceDifference
-        view?.update(currentWalkDistance: currentWalk!.distance)
         
-        todayCoveredDistance += distanceDifference
-        view?.update(todayTotalDistance: todayCoveredDistance, whenAverage: averageWeekDistance)
+        currentWalkDistance += distance
+        todayCoveredDistance += distance
+        
+        view?.update(currentWalkDistance: currentWalkDistance)
+        view?.update(todayTotalDistance: todayCoveredDistance)
+        
+        NotificationCenter.default.post(name: .currentWalkDidUpdate, object: currentWalk!)
+    }
+    
+    func locationAccessNotGranted() {
+        view?.show(error: .locationAccessNotGranted)
+    }
+    
+}
+
+extension RecordingPresenterDefault: MovementInteractorDelegate {
+    
+    func liveUpdate(distance: Double) {
+        currentWalkDistance = distance
+        fetchStatistics()
+        
+        view?.update(currentWalkDistance: currentWalkDistance)
+    }
+    
+    func update(withLastWeekStatistics weekStatistics: [[Date : Double]]) {
+        fetchedWeekStatistics = weekStatistics
+        
+        let weekStatisticsGroupedByWeekday = fetchedWeekStatistics.map { dict -> [Int: Double] in
+            let pair = dict.first!
+            return [Calendar.current.component(.weekday, from: pair.key) - 1: pair.value]
+        }
+        
+        if let todayStatistics = fetchedWeekStatistics.last?.first, todayStatistics.key == Calendar.current.startOfDay(for: Date()) {
+            todayCoveredDistance = todayStatistics.value
+            view?.update(todayTotalDistance: todayCoveredDistance)
+        }
+        
+        let weekAverage = fetchedWeekStatistics.reduce(0) { $0 + $1.first!.value } / Double(fetchedWeekStatistics.count)
+        
+        view?.update(weekStatistics: weekStatisticsGroupedByWeekday, weekAverageDistance: weekAverage, todayTotalDistance: todayCoveredDistance)
+    }
+    
+    func motionAccessNotGranted() {
+        view?.show(error: .motionAccessNotGranted)
     }
     
 }

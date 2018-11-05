@@ -15,8 +15,9 @@
 		2C080C132167E24C0018B1B8 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C080C112167E24C0018B1B8 /* LaunchScreen.storyboard */; };
 		2C080C242167E8250018B1B8 /* LocationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C080C232167E8250018B1B8 /* LocationInteractor.swift */; };
 		2C0CBC01216B4F0F00BA648B /* RecordButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0CBC00216B4F0F00BA648B /* RecordButton.swift */; };
+		2C0F0CD9218F04C400EEE1C6 /* UIViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F0CD8218F04C400EEE1C6 /* UIViewController+Extension.swift */; };
+		2C0F7A2B2181A33500FF6F6B /* MovementInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F7A2A2181A33500FF6F6B /* MovementInteractor.swift */; };
 		2C11289C216AA7EE0027FDBE /* GraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11289B216AA7EE0027FDBE /* GraphView.swift */; };
-		2C11289E216AA8520027FDBE /* RoundedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C11289D216AA8520027FDBE /* RoundedView.swift */; };
 		2C87718A216A409E0080707A /* walkie.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 2C877188216A409E0080707A /* walkie.xcdatamodeld */; };
 		2C87718C216A45E40080707A /* WalksInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C87718B216A45E40080707A /* WalksInteractor.swift */; };
 		2CE95CA32175C85000568978 /* DistanceToStringCoverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */; };
@@ -39,8 +40,9 @@
 		2C080C142167E24C0018B1B8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2C080C232167E8250018B1B8 /* LocationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationInteractor.swift; sourceTree = "<group>"; };
 		2C0CBC00216B4F0F00BA648B /* RecordButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordButton.swift; sourceTree = "<group>"; };
+		2C0F0CD8218F04C400EEE1C6 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
+		2C0F7A2A2181A33500FF6F6B /* MovementInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovementInteractor.swift; sourceTree = "<group>"; };
 		2C11289B216AA7EE0027FDBE /* GraphView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GraphView.swift; sourceTree = "<group>"; };
-		2C11289D216AA8520027FDBE /* RoundedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedView.swift; sourceTree = "<group>"; };
 		2C877189216A409E0080707A /* walkie.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = walkie.xcdatamodel; sourceTree = "<group>"; };
 		2C87718B216A45E40080707A /* WalksInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalksInteractor.swift; sourceTree = "<group>"; };
 		2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceToStringCoverter.swift; sourceTree = "<group>"; };
@@ -67,7 +69,6 @@
 			isa = PBXGroup;
 			children = (
 				2C11289B216AA7EE0027FDBE /* GraphView.swift */,
-				2C11289D216AA8520027FDBE /* RoundedView.swift */,
 				2C0CBC00216B4F0F00BA648B /* RecordButton.swift */,
 			);
 			path = "Custom Views";
@@ -78,6 +79,7 @@
 			children = (
 				2C080C042167E24C0018B1B8 /* walkie */,
 				2C080C032167E24C0018B1B8 /* Products */,
+				2C1639FD218222A100519A3D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -123,10 +125,26 @@
 		2C080C222167E8150018B1B8 /* Interactor */ = {
 			isa = PBXGroup;
 			children = (
+				2C0F7A292181A30400FF6F6B /* Movement */,
 				2C877185216A31FE0080707A /* Walks */,
 				2C877184216A31F60080707A /* Location */,
 			);
 			path = Interactor;
+			sourceTree = "<group>";
+		};
+		2C0F7A292181A30400FF6F6B /* Movement */ = {
+			isa = PBXGroup;
+			children = (
+				2C0F7A2A2181A33500FF6F6B /* MovementInteractor.swift */,
+			);
+			path = Movement;
+			sourceTree = "<group>";
+		};
+		2C1639FD218222A100519A3D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		2C877184216A31F60080707A /* Location */ = {
@@ -178,6 +196,7 @@
 		2CE95CA72175DFE800568978 /* Tools */ = {
 			isa = PBXGroup;
 			children = (
+				2C0F0CD8218F04C400EEE1C6 /* UIViewController+Extension.swift */,
 				2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */,
 				2CE95CAD2175E0F200568978 /* Date+Strideable.swift */,
 			);
@@ -246,6 +265,9 @@
 							com.apple.BackgroundModes = {
 								enabled = 1;
 							};
+							com.apple.HealthKit = {
+								enabled = 0;
+							};
 						};
 					};
 				};
@@ -290,14 +312,15 @@
 				2C87718A216A409E0080707A /* walkie.xcdatamodeld in Sources */,
 				2C080C082167E24C0018B1B8 /* RecordingViewController.swift in Sources */,
 				2C11289C216AA7EE0027FDBE /* GraphView.swift in Sources */,
+				2C0F0CD9218F04C400EEE1C6 /* UIViewController+Extension.swift in Sources */,
 				2C0CBC01216B4F0F00BA648B /* RecordButton.swift in Sources */,
 				2C080C062167E24C0018B1B8 /* AppDelegate.swift in Sources */,
 				2CE95CB62175E8A800568978 /* MapViewController.swift in Sources */,
 				2CE95CAE2175E0F200568978 /* Date+Strideable.swift in Sources */,
 				2CE95CAC2175E01400568978 /* Router.swift in Sources */,
 				2C080C242167E8250018B1B8 /* LocationInteractor.swift in Sources */,
+				2C0F7A2B2181A33500FF6F6B /* MovementInteractor.swift in Sources */,
 				2CE95CB22175E69700568978 /* MapPresenter.swift in Sources */,
-				2C11289E216AA8520027FDBE /* RoundedView.swift in Sources */,
 				2C87718C216A45E40080707A /* WalksInteractor.swift in Sources */,
 				2C00EB3B216C6C5F00653008 /* RecordingPresenter.swift in Sources */,
 				2CE95CA32175C85000568978 /* DistanceToStringCoverter.swift in Sources */,
@@ -450,6 +473,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JD6X7BWBF5;
 				INFOPLIST_FILE = walkie/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -468,6 +492,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = JD6X7BWBF5;
 				INFOPLIST_FILE = walkie/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -17,9 +17,10 @@ fileprivate struct Constants {
     static let topMargin: CGFloat = 16.0
     static let bottomMargin: CGFloat = 8.0
     static let graphBottomMargin: CGFloat = 30.0
+    static let flashingSelectionWidth: CGFloat = 3.0
 }
 
-class GraphView: RoundedView {
+class GraphView: UIControl {
     
     @IBInspectable var weakdayColor: UIColor = .white {
         didSet {
@@ -51,15 +52,68 @@ class GraphView: RoundedView {
         }
     }
     
-    var distancesByDays: [[Date: Double]] = []
+    var distancesByDays: [[Int: Double]] = [] {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
     
-    func update(withDistancesByDays distancesByDays: [[Date: Double]]) {
-        self.distancesByDays = distancesByDays
-        setNeedsDisplay()
+    private var maximumDistance: Double = 0.0
+    
+    var pickedIndex: Int?
+    
+    override func sendAction(_ action: Selector, to target: Any?, for event: UIEvent?) {
+        guard let touch = event?.allTouches?.first(where: { $0.phase == .ended }) else {
+            super.sendAction(action, to: target, for: event)
+            return
+        }
+        
+        let xLocation = touch.location(in: self).x - Constants.graphLeftMargin
+        
+        let availableWidth = self.bounds.width - Constants.graphLeftMargin - Constants.graphRightMargin
+        let widthPerWeekday = availableWidth / CGFloat(Constants.totalWeekdaysPresentable - 1)
+        
+        pickedIndex = Int(min((xLocation / widthPerWeekday).rounded(.toNearestOrAwayFromZero), CGFloat(Constants.totalWeekdaysPresentable - 1)))
+        
+        super.sendAction(action, to: target, for: event)
+        
+        flashSelection()
+    }
+    
+    private func flashSelection() {
+        guard let index = pickedIndex else {
+            return
+        }
+        
+        let x = calculateGraphX(forDayIndex: index) - Constants.flashingSelectionWidth / 2.0
+        let y = calculateGraphY(forDistance: distancesByDays[index].first!.value, whereMaximumIs: maximumDistance)
+        
+        let height = self.bounds.height - Constants.graphBottomMargin - y
+        
+        let flashLayer = CALayer()
+        flashLayer.frame = CGRect(x: x, y: y, width: Constants.flashingSelectionWidth, height: height)
+        flashLayer.opacity = 0.0
+        flashLayer.backgroundColor = UIColor.white.cgColor
+        
+        self.layer.addSublayer(flashLayer)
+        
+        let flashAnimation = CABasicAnimation(keyPath: "opacity")
+        flashAnimation.fromValue = 0.0
+        flashAnimation.toValue = 0.3
+        flashAnimation.duration = 0.1
+        flashAnimation.autoreverses = true
+        
+        CATransaction.begin()
+        CATransaction.setCompletionBlock {
+            flashLayer.removeFromSuperlayer()
+        }
+        flashLayer.add(flashAnimation, forKey: nil)
+        CATransaction.commit()
     }
     
     override func draw(_ rect: CGRect) {
-        if let maximumDistance = distancesByDays.max(by: { $0.first!.value < $1.first!.value })?.first?.value, maximumDistance > 0 {
+        if let maximumDistance = distancesByDays.max(by: { $0.first!.value < $1.first!.value })?.first?.value {
+            self.maximumDistance = maximumDistance
             // Background lines
             let backgroundLinesPath = UIBezierPath()
             backgroundLinesPath.lineWidth = 1.5
@@ -115,13 +169,12 @@ class GraphView: RoundedView {
         }
         
         // Weakdays
-        let font = UIFont(name: "AvenirNext-Regular", size: 15)!
+        let font = UIFont(name: "AvenirNext-Regular", size: 12)!
         let attributes = [NSAttributedString.Key.font: font,
                           NSAttributedString.Key.foregroundColor: graphColor]
         
-        let calendar = Calendar.current
-        
-        let weekdays: [NSString] = distancesByDays.map { calendar.veryShortWeekdaySymbols[calendar.component(.weekday, from: $0.keys.first!) - 1] as NSString }
+        let calendar = Calendar.current        
+        let weekdays: [NSString] = distancesByDays.map { calendar.shortWeekdaySymbols[$0.keys.first!] as NSString }
         for (index, weekday) in weekdays.enumerated() {
             weekday.draw(at: CGPoint(x: calculateGraphX(forDayIndex: index) - weekday.size(withAttributes: attributes).width / 2,
                                      y: self.bounds.height - Constants.graphBottomMargin + 5), withAttributes: attributes)
@@ -136,8 +189,24 @@ class GraphView: RoundedView {
     
     private func calculateGraphY(forDistance distance: Double, whereMaximumIs maximum: Double) -> CGFloat {
         let availableHeight = self.bounds.height - Constants.graphBottomMargin - Constants.topMargin
+        
+        guard maximum > 0 else {
+            return self.bounds.height - Constants.graphBottomMargin
+        }
+        
         let y = CGFloat(distance / maximum) * availableHeight + Constants.graphBottomMargin
         return self.bounds.height - y
+    }
+    
+    func showError(withMessage message: String) {
+        let label = UILabel()
+        label.textColor = .white
+        label.text = message
+        label.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(label)
+        
+        label.centerXAnchor.constraint(equalTo: self.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
     }
     
 }
