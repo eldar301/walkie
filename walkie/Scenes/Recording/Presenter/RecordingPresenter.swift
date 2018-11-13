@@ -57,6 +57,7 @@ class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
     
     private let desiredAccuracy = 30.0
     private let weekdaysCount = 7
+    private let numberOfCoordinatesToSaveThreshold = 2
     
     private var fetchedWeekStatistics: [[Date: Double]] = []
     private var todayCoveredDistance: Double = 0
@@ -86,7 +87,7 @@ class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
     
     func stopRecording() {
         if let currentWalk = currentWalk {
-            if (currentWalk.coordinates?.count ?? 0) < 2 {
+            if (currentWalk.coordinates?.count ?? 0) < numberOfCoordinatesToSaveThreshold {
                 walksInteractor.delete(walk: currentWalk)
             }
         }
