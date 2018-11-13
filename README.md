@@ -1,6 +1,7 @@
 # walkie
 ## Приложение для записи пройденных маршрутов ##
 Приложение может работать в бэкграунде
+
 Для отрисовки анимаций используется [Core Animation](https://developer.apple.com/documentation/quartzcore)
 
 Для построения графика - [Core Graphics](https://developer.apple.com/documentation/coregraphics)
