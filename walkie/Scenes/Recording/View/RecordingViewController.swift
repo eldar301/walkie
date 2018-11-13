@@ -10,6 +10,21 @@ import UIKit
 import CoreData
 import MapKit
 
+fileprivate struct Constants {
+    struct Strings {
+        static let moreThanAverage = NSLocalizedString("More than average ", comment: #file)
+        static let moveOnAverageIs = NSLocalizedString("Move on! Average is ", comment: #file)
+    }
+    struct StatisticsView {
+        static let cornerRadius: CGFloat = 10.0
+        struct BumpAnimation {
+            static let property = "transform.scale"
+            static let duration = 0.1
+            static let desiredScale = 0.95
+        }
+    }
+}
+
 class RecordingViewController: UIViewController {
     
     @IBOutlet weak var graphView: GraphView!
@@ -32,9 +47,9 @@ class RecordingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        graphView.layer.cornerRadius = 10.0
-        todayCoveredDistanceView.layer.cornerRadius = 10.0
-        currentWalkDistanceView.layer.cornerRadius = 10.0
+        graphView.layer.cornerRadius = Constants.StatisticsView.cornerRadius
+        todayCoveredDistanceView.layer.cornerRadius = Constants.StatisticsView.cornerRadius
+        currentWalkDistanceView.layer.cornerRadius = Constants.StatisticsView.cornerRadius
         
         let router = Router(viewController: self)
         router.setupRootScene()
@@ -76,11 +91,11 @@ class RecordingViewController: UIViewController {
     }
     
     private func bumpAnimation(withView view: UIView) {
-        let animation = CABasicAnimation(keyPath: "transform.scale")
+        let animation = CABasicAnimation(keyPath: Constants.StatisticsView.BumpAnimation.property)
         animation.fromValue = 1.0
-        animation.toValue = 0.95
+        animation.toValue = Constants.StatisticsView.BumpAnimation.desiredScale
         animation.autoreverses = true
-        animation.duration = 0.1
+        animation.duration = Constants.StatisticsView.BumpAnimation.duration
         view.layer.add(animation, forKey: nil)
     }
     
@@ -129,9 +144,9 @@ extension RecordingViewController: RecordingView {
         
         let stringAverageAtWeek = DistanceToStringCoverter.stringDistance(fromDistance: weekAverageDistance)
         if todayTotalDistance > weekAverageDistance {
-            todayComparisonLabel.text = "More than average \(stringAverageAtWeek)"
+            todayComparisonLabel.text = "\(Constants.Strings.moreThanAverage)\(stringAverageAtWeek)"
         } else {
-            todayComparisonLabel.text = "Move on! Average is \(stringAverageAtWeek)"
+            todayComparisonLabel.text = "\(Constants.Strings.moveOnAverageIs)\(stringAverageAtWeek)"
         }
 
     }

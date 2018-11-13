@@ -30,13 +30,15 @@ class MovementInteractorDefault: MovementInteractor {
     
     private let pedometer = CMPedometer()
     
+    private let weekdaysCount = 7
+    
     func fetchLastWeekStatistics() {
         let currentDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: Date())
         
         let group = DispatchGroup()
         
         var lastWeekStatistics: [[Date: Double]] = []
-        for day in (0 ... 6).reversed() {
+        for day in (0 ... weekdaysCount - 1).reversed() {
             var fetchingDateComponents = currentDateComponents
             fetchingDateComponents.day! -= day
             

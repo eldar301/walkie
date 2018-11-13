@@ -9,6 +9,16 @@
 import UIKit
 import MapKit
 
+fileprivate struct Constants {
+    struct Map {
+        static let snappingMapTimeThreshold: TimeInterval = 3
+    }
+    struct Renderer {
+        static let routeColors: [UIColor] = [.red, .blue, .orange, .green]
+        static let lineWidth: CGFloat = 2.0
+    }
+}
+
 class MapViewController: UIViewController {
     
     @IBOutlet weak var closeButton: UIButton!
@@ -28,8 +38,7 @@ class MapViewController: UIViewController {
     private var cachedCurrentWalkCoordinates: [CLLocationCoordinate2D] = []
 
     private var lastTimeUserInteractedWithMap: Date? = nil
-
-    private let routeColors: [UIColor] = [.red, .blue, .orange, .green]
+    
     private var nextColorIndex = 0
     
     override func viewDidLoad() {
@@ -127,7 +136,7 @@ extension MapViewController: MapView {
             var snapToRoute: Bool
             
             if let lastInteractDate = lastTimeUserInteractedWithMap {
-                snapToRoute = lastInteractDate.timeIntervalSinceNow < -3
+                snapToRoute = lastInteractDate.timeIntervalSinceNow < -Constants.Map.snappingMapTimeThreshold
             } else {
                 snapToRoute = true
             }
@@ -146,10 +155,10 @@ extension MapViewController: MKMapViewDelegate {
         if polyline === currentWalkPolyline {
             renderer.strokeColor = .black
         } else {
-            renderer.strokeColor = routeColors[nextColorIndex]
-            nextColorIndex = (nextColorIndex + 1) % routeColors.count
+            renderer.strokeColor = Constants.Renderer.routeColors[nextColorIndex]
+            nextColorIndex = (nextColorIndex + 1) % Constants.Renderer.routeColors.count
         }
-        renderer.lineWidth = 2.0
+        renderer.lineWidth = Constants.Renderer.lineWidth
         return renderer
     }
     

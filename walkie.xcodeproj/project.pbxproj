@@ -22,7 +22,6 @@
 		2C87718C216A45E40080707A /* WalksInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C87718B216A45E40080707A /* WalksInteractor.swift */; };
 		2CE95CA32175C85000568978 /* DistanceToStringCoverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */; };
 		2CE95CAC2175E01400568978 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CAB2175E01400568978 /* Router.swift */; };
-		2CE95CAE2175E0F200568978 /* Date+Strideable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CAD2175E0F200568978 /* Date+Strideable.swift */; };
 		2CE95CB22175E69700568978 /* MapPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CB12175E69700568978 /* MapPresenter.swift */; };
 		2CE95CB42175E85F00568978 /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2CE95CB32175E85F00568978 /* Map.storyboard */; };
 		2CE95CB62175E8A800568978 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2CE95CB52175E8A800568978 /* MapViewController.swift */; };
@@ -47,7 +46,6 @@
 		2C87718B216A45E40080707A /* WalksInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalksInteractor.swift; sourceTree = "<group>"; };
 		2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceToStringCoverter.swift; sourceTree = "<group>"; };
 		2CE95CAB2175E01400568978 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
-		2CE95CAD2175E0F200568978 /* Date+Strideable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Strideable.swift"; sourceTree = "<group>"; };
 		2CE95CB12175E69700568978 /* MapPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapPresenter.swift; sourceTree = "<group>"; };
 		2CE95CB32175E85F00568978 /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
 		2CE95CB52175E8A800568978 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
@@ -198,7 +196,6 @@
 			children = (
 				2C0F0CD8218F04C400EEE1C6 /* UIViewController+Extension.swift */,
 				2CE95CA22175C85000568978 /* DistanceToStringCoverter.swift */,
-				2CE95CAD2175E0F200568978 /* Date+Strideable.swift */,
 			);
 			path = Tools;
 			sourceTree = "<group>";
@@ -316,7 +313,6 @@
 				2C0CBC01216B4F0F00BA648B /* RecordButton.swift in Sources */,
 				2C080C062167E24C0018B1B8 /* AppDelegate.swift in Sources */,
 				2CE95CB62175E8A800568978 /* MapViewController.swift in Sources */,
-				2CE95CAE2175E0F200568978 /* Date+Strideable.swift in Sources */,
 				2CE95CAC2175E01400568978 /* Router.swift in Sources */,
 				2C080C242167E8250018B1B8 /* LocationInteractor.swift in Sources */,
 				2C0F7A2B2181A33500FF6F6B /* MovementInteractor.swift in Sources */,

@@ -11,6 +11,8 @@ import UIKit
 fileprivate struct Constants {
     static let roundRectOffset: CGFloat = 3.0
     static let roundedSquareScale: CGFloat = 0.5
+    static let recordedCornerRadius: CGFloat = 5.0
+    static let changeStateAnimationDuration = 0.1
 }
 
 @IBDesignable
@@ -50,7 +52,7 @@ class RecordButton: UIButton {
         let animation = CABasicAnimation(keyPath: "path")
         animation.fromValue = statusLayer.path
         animation.toValue = newPath
-        animation.duration = 0.1
+        animation.duration = Constants.changeStateAnimationDuration
         statusLayer.add(animation, forKey: nil)
         statusLayer.path = newPath
     }
@@ -82,7 +84,7 @@ class RecordButton: UIButton {
                                            y: edgeOffset,
                                            width: roundedSquareWidth,
                                            height: roundedSquareWidth)
-            let roundedSquarePath = UIBezierPath(roundedRect: roundedSquareRect, cornerRadius: 5.0)
+            let roundedSquarePath = UIBezierPath(roundedRect: roundedSquareRect, cornerRadius: Constants.recordedCornerRadius)
             return roundedSquarePath.cgPath
         } else {
             let edgeOffset = circleLineWidth + Constants.roundRectOffset

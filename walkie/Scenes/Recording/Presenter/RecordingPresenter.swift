@@ -55,6 +55,9 @@ class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
         self.locationInteractor.delegate = self
     }
     
+    private let desiredAccuracy = 30.0
+    private let weekdaysCount = 7
+    
     private var fetchedWeekStatistics: [[Date: Double]] = []
     private var todayCoveredDistance: Double = 0
     private var currentWalkDistance: Double = 0
@@ -115,7 +118,7 @@ class RecordingPresenterDefault: RecordingPresenter, MapPresenterInput {
         
         walksToShow = walksInteractor.fetchWalks(withDateComponents: Calendar.current.dateComponents([.year, .month, .day], from: date))
         
-        router.showMapScene(input: self, autoupdates: index == 6)
+        router.showMapScene(input: self, autoupdates: index == weekdaysCount - 1)
     }
     
     private func fetchStatistics() {
@@ -144,7 +147,7 @@ extension RecordingPresenterDefault: LocationInteractorDelegate {
     }
     
     func update(withNewLatitude latitude: Double, longitude: Double, distance: Double, accuracy: Double) {
-        guard 0 ... 30.0 ~= accuracy else {
+        guard 0 ... desiredAccuracy ~= accuracy else {
             return
         }
         
